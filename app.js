@@ -6,13 +6,15 @@ ang.controller('visualPromiseController', ['$scope', '$location', function ($sco
     $scope.barTotal = 5;
     $scope.finished = false;
 
+    var maxBarWidth = 500;
+    var minBarWidth = 50;
     var updateIntervalMS = 50;
     var pixelIncrement = 2;
     var barRange = _.range(0, $scope.barTotal);
     var colors = _.shuffle(["green", "red", "purple", "orange", "darkgray", "pink", "yellow", "brown", "violet", "blue"]);
 
     $scope.bars = _.map(barRange, function (b) {
-        var width = Math.ceil(Math.random() * 500 + 50);
+        var width = Math.ceil(Math.random() * maxBarWidth + minBarWidth);
         return {
             bId: b,
             width: width,
@@ -60,33 +62,34 @@ ang.controller('visualPromiseController', ['$scope', '$location', function ($sco
         return def.promise;
     };
 
-    var shrinkers = _.map([0, 1, 2, 3, 4], function (bId) {
+    // a collection of functions that return promises (NOT promises)
+    var shrinkers = _.map($scope.bars, function (bar) {
         return function () {
-            return shrinkBar(bId);
+            return shrinkBar(bar.bId);
         }
     });
 
-    var growers = _.map([0, 1, 2, 3, 4], function (bId) {
+    // a collection of functions that return promises (NOT promises)
+    var growers = _.map($scope.bars, function (bar) {
         return function () {
-            return growBar(bId);
+            return growBar(bar.bId);
         }
     });
 
-    var kickOff = function (promiseFunctions) {
+    var startPromiseFunctions = function (promiseFunctions) {
         return _.map(promiseFunctions, function (f) {
             return f();
         })
     };
 
-    Q.all(kickOff(shrinkers))
+    Q.all(startPromiseFunctions(shrinkers))
         .then(function () {
             console.log('done shrinking');
-            return Q.all(kickOff(growers));
+            pixelIncrement = 10;
+            //return growers.reduce(Q.when, Q('init'));
+            return Q.all(startPromiseFunctions(growers));
         })
         .then(function () {
-            return Q.all(kickOff(growers));
-        })
-        .then(function() {
             $scope.finished=true;
             $scope.$apply();
         })
