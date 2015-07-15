@@ -1,0 +1,7 @@
+bower_components
+node_modules
+.idea/
+.workspace/
+samples.json
+*-samples.json
+old/

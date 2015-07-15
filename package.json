@@ -1,0 +1,22 @@
+{
+  "name": "visual-promises",
+  "version": "0.0.1",
+  "description": "visualizing promises",
+  "main": "visual-promises.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "cp@cjparker.us",
+  "license": "MIT",
+  "dependencies": {
+    "command-line-args": "^0.5.9",
+    "express": "^4.13.0",
+    "moment": "^2.10.3",
+    "morgan": "^1.6.0",
+    "q": "^1.4.1",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies" : {
+  }
+
+}
